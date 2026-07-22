@@ -2,8 +2,20 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <header className="bg-sox-black text-white">
-      <div className="max-w-5xl mx-auto px-4 py-12 flex flex-col items-center text-center gap-5">
+    <header className="relative text-white overflow-hidden">
+      {/* Full-bleed background image */}
+      <Image
+        src="/hero.jpg"
+        alt=""
+        fill
+        priority
+        className="object-cover object-center"
+        sizes="100vw"
+      />
+      {/* Dark gradient overlay for text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-20 flex flex-col items-center text-center gap-5">
         <Image
           src="/logo.png"
           alt="Bargain Grocery"
@@ -39,3 +51,4 @@ export default function Hero() {
     </header>
   );
 }
+
