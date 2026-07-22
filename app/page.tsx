@@ -4,13 +4,11 @@ import HowItWorks from "@/components/HowItWorks";
 import PrizePanel from "@/components/PrizePanel";
 import ScoringCard from "@/components/ScoringCard";
 import BracketApp from "@/components/BracketApp";
-import VideoNews from "@/components/VideoNews";
 import Newsletter from "@/components/Newsletter";
 import Information from "@/components/Information";
 import Clients from "@/components/Clients";
 import Footer from "@/components/Footer";
 
-import { VIDEO_ITEMS } from "@/data/videos";
 import { SPONSORS } from "@/data/sponsors";
 
 export default function Home() {
@@ -35,13 +33,6 @@ export default function Home() {
         <BracketApp />
 
       </main>
-
-      {/* Video section */}
-      <div className="w-full bg-sox-black py-12">
-        <div className="max-w-5xl mx-auto px-4">
-          <VideoNews videos={VIDEO_ITEMS} />
-        </div>
-      </div>
 
       <div className="max-w-5xl mx-auto w-full px-4 flex flex-col gap-12 py-12">
         {/* Information cards */}
