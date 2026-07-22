@@ -4,7 +4,7 @@ export default function PrizePanel() {
       <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-crimson mb-3">
         Grand Prize
       </p>
-      <p className="font-heading font-black text-5xl text-white leading-none mb-1">$500</p>
+      <p className="font-heading font-black text-5xl text-white leading-none mb-1">$200</p>
       <p className="font-heading font-bold text-white/80 text-sm uppercase tracking-wide mb-4">
         Bargain Grocery Gift Card
       </p>

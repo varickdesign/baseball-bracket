@@ -19,11 +19,11 @@ const interTight = Inter_Tight({
 export const metadata: Metadata = {
   title: "World Series Bracket Challenge — Bargain Grocery",
   description:
-    "Pick every postseason series winner and win a $500 Bargain Grocery gift card. Make your MLB playoff bracket picks now.",
+    "Pick every postseason series winner and win a $200 Bargain Grocery gift card. Make your MLB playoff bracket picks now.",
   openGraph: {
     title: "World Series Bracket Challenge — Bargain Grocery",
     description:
-      "Pick every postseason series and win a $500 Bargain Grocery gift card.",
+      "Pick every postseason series and win a $200 Bargain Grocery gift card.",
     type: "website",
   },
 };

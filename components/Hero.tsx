@@ -39,7 +39,7 @@ interface Props {
 export default function Hero({
   headline = "World Series",
   subheadline = "Bracket Challenge",
-  subcopy = "Pick every series winner from Wild Card through the World Series. The best bracket wins a $500 Bargain Grocery gift card.",
+  subcopy = "Pick every series winner from Wild Card through the World Series. The best bracket wins a $200 Bargain Grocery gift card.",
   ctaLabel = "Make Your Picks →",
   ctaHref = "#bracket",
 }: Props) {
