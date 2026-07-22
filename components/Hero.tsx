@@ -1,9 +1,60 @@
-import Image from "next/image";
+"use client";
 
-export default function Hero() {
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+// Wild Card Series first pitch target — update once MLB confirms the date
+const TARGET_DATE = new Date("2026-09-29T20:07:00-04:00");
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  mins: number;
+  secs: number;
+}
+
+function getTimeLeft(): TimeLeft {
+  const diff = Math.max(0, TARGET_DATE.getTime() - Date.now());
+  return {
+    days:  Math.floor(diff / 86_400_000),
+    hours: Math.floor((diff % 86_400_000) / 3_600_000),
+    mins:  Math.floor((diff % 3_600_000)  / 60_000),
+    secs:  Math.floor((diff % 60_000)     / 1_000),
+  };
+}
+
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+interface Props {
+  headline?: string;
+  subheadline?: string;
+  highlightedWord?: string;
+  subcopy?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+export default function Hero({
+  headline = "World Series",
+  subheadline = "Bracket Challenge",
+  subcopy = "Pick every series winner from Wild Card through the World Series. The best bracket wins a $500 Bargain Grocery gift card.",
+  ctaLabel = "Make Your Picks →",
+  ctaHref = "#bracket",
+}: Props) {
+  const [time, setTime] = useState<TimeLeft>(getTimeLeft());
+  const expired = TARGET_DATE.getTime() <= Date.now();
+
+  useEffect(() => {
+    if (expired) return;
+    const id = setInterval(() => setTime(getTimeLeft()), 1000);
+    return () => clearInterval(id);
+  }, [expired]);
+
   return (
-    <header className="relative text-white overflow-hidden">
-      {/* Full-bleed background image */}
+    <section className="relative text-white overflow-hidden">
+      {/* Full-bleed background */}
       <Image
         src="/hero.jpg"
         alt=""
@@ -12,57 +63,65 @@ export default function Hero() {
         className="object-cover object-center"
         sizes="100vw"
       />
-      {/* Dark gradient overlay for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
+      {/* Gradient overlay — heavier on left so text is readable */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
 
-      {/* Top nav bar — logo left */}
-      <div className="relative z-10 border-b border-white/10">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">
-          <Image
-            src="/logo.png"
-            alt="Bargain Grocery"
-            width={52}
-            height={52}
-            priority
-            className="h-13 w-13 rounded-full flex-shrink-0"
-          />
-          <div>
-            <p className="font-heading font-black text-sm uppercase tracking-widest text-white leading-tight">
-              Bargain Grocery
-            </p>
-            <p className="font-body text-[10px] text-white/50 uppercase tracking-widest">
-              Supporting Community
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Hero content — left-aligned */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 py-16 sm:py-24 flex flex-col items-start gap-5">
-        <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-crimson">
-          ⚾ 2026 Postseason
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-16 sm:py-24 flex flex-col items-start gap-6">
+        {/* Eyebrow */}
+        <p className="font-heading font-bold text-[11px] uppercase tracking-[0.25em] text-crimson">
+          ⚾ 2026 MLB Postseason
         </p>
 
-        <h1 className="font-heading font-black text-4xl sm:text-6xl tracking-tight leading-none uppercase">
-          World Series
+        {/* Headline */}
+        <h1 className="font-heading font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-none uppercase">
+          {headline}
           <br />
-          <span className="text-crimson">Bracket Challenge</span>
+          <span className="text-crimson">{subheadline}</span>
         </h1>
 
+        {/* Sub-copy */}
         <p className="font-body text-white/70 text-base sm:text-lg max-w-lg leading-relaxed">
-          Pick every series winner from Wild Card through the World Series.
-          The best bracket wins a{" "}
-          <strong className="text-white font-semibold">$500 Bargain Grocery gift card</strong>.
+          {subcopy}
         </p>
 
+        {/* CTA */}
         <a
-          href="#bracket"
-          className="mt-1 inline-block bg-crimson hover:bg-crimson-dark text-white font-heading font-bold text-sm uppercase tracking-widest px-8 py-3 rounded-full shadow-lg transition-colors"
+          href={ctaHref}
+          className="bg-crimson hover:bg-crimson-dark text-white font-heading font-black text-sm uppercase tracking-widest px-8 py-3.5 rounded-full shadow-lg transition-colors"
         >
-          Make Your Picks →
+          {ctaLabel}
         </a>
+
+        {/* Countdown */}
+        {!expired ? (
+          <div className="mt-2 flex flex-col gap-2">
+            <p className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-white/40">
+              Entries close at first pitch
+            </p>
+            <div className="flex gap-3 sm:gap-5">
+              {[
+                { value: time.days,  label: "Days" },
+                { value: time.hours, label: "Hrs" },
+                { value: time.mins,  label: "Min" },
+                { value: time.secs,  label: "Sec" },
+              ].map(({ value, label }) => (
+                <div key={label} className="flex flex-col items-center">
+                  <span className="font-heading font-black text-3xl sm:text-4xl leading-none tabular-nums text-white">
+                    {pad(value)}
+                  </span>
+                  <span className="font-heading font-bold text-[9px] uppercase tracking-widest text-white/40 mt-1">
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="font-heading font-bold text-xs uppercase tracking-widest text-crimson">
+            Entries are now closed.
+          </p>
+        )}
       </div>
-    </header>
+    </section>
   );
 }
-
