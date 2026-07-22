@@ -15,17 +15,31 @@ export default function Hero() {
       {/* Dark gradient overlay for text legibility */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 py-20 flex flex-col items-center text-center gap-5">
-        <Image
-          src="/logo.png"
-          alt="Bargain Grocery"
-          width={100}
-          height={100}
-          priority
-          className="h-20 w-20 rounded-full"
-        />
+      {/* Top nav bar — logo left */}
+      <div className="relative z-10 border-b border-white/10">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">
+          <Image
+            src="/logo.png"
+            alt="Bargain Grocery"
+            width={52}
+            height={52}
+            priority
+            className="h-13 w-13 rounded-full flex-shrink-0"
+          />
+          <div>
+            <p className="font-heading font-black text-sm uppercase tracking-widest text-white leading-tight">
+              Bargain Grocery
+            </p>
+            <p className="font-body text-[10px] text-white/50 uppercase tracking-widest">
+              Supporting Community
+            </p>
+          </div>
+        </div>
+      </div>
 
-        <p className="text-xs font-heading font-700 uppercase tracking-[0.2em] text-crimson">
+      {/* Hero content — left-aligned */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-16 sm:py-24 flex flex-col items-start gap-5">
+        <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-crimson">
           ⚾ 2026 Postseason
         </p>
 
@@ -35,7 +49,7 @@ export default function Hero() {
           <span className="text-crimson">Bracket Challenge</span>
         </h1>
 
-        <p className="font-body text-white/70 text-base sm:text-lg max-w-xl leading-relaxed">
+        <p className="font-body text-white/70 text-base sm:text-lg max-w-lg leading-relaxed">
           Pick every series winner from Wild Card through the World Series.
           The best bracket wins a{" "}
           <strong className="text-white font-semibold">$500 Bargain Grocery gift card</strong>.
