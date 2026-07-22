@@ -5,13 +5,11 @@ import PrizePanel from "@/components/PrizePanel";
 import ScoringCard from "@/components/ScoringCard";
 import BracketApp from "@/components/BracketApp";
 import VideoNews from "@/components/VideoNews";
-import LatestNews from "@/components/LatestNews";
 import Newsletter from "@/components/Newsletter";
 import Information from "@/components/Information";
 import Clients from "@/components/Clients";
 import Footer from "@/components/Footer";
 
-import { NEWS_ARTICLES } from "@/data/news";
 import { VIDEO_ITEMS } from "@/data/videos";
 import { SPONSORS } from "@/data/sponsors";
 
@@ -36,8 +34,6 @@ export default function Home() {
         {/* Interactive bracket picker + entry form */}
         <BracketApp />
 
-        {/* Latest news */}
-        <LatestNews articles={NEWS_ARTICLES} />
       </main>
 
       {/* Video section */}
