@@ -12,12 +12,19 @@ const RULES = [
 
 export default function RulesCard() {
   return (
-    <div id="rules" className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-      <h2 className="font-extrabold text-gray-900 text-lg mb-4">Official Rules</h2>
-      <ol className="flex flex-col gap-3 list-decimal list-outside pl-4">
+    <div id="rules" className="border border-sox-border border-t-4 border-t-crimson bg-white">
+      <div className="bg-sox-charcoal px-5 py-3">
+        <p className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-white/60">
+          Official Rules
+        </p>
+      </div>
+      <ol className="flex flex-col divide-y divide-sox-border">
         {RULES.map((rule, i) => (
-          <li key={i} className="text-sm text-gray-600 leading-relaxed">
-            {rule}
+          <li key={i} className={`flex gap-4 px-5 py-4 ${i % 2 === 1 ? "bg-sox-gray" : "bg-white"}`}>
+            <span className="font-heading font-black text-crimson text-sm flex-shrink-0 w-5 text-right">
+              {i + 1}.
+            </span>
+            <span className="font-body text-sm text-sox-body leading-relaxed">{rule}</span>
           </li>
         ))}
       </ol>

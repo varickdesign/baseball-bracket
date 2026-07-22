@@ -53,11 +53,18 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
     }
 
     setSubmitting(true);
-    // Simulate submission (wire to real API route later)
+    // Simulate submission — wire to real API route before launch
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
     onSubmitSuccess();
   }
+
+  const inputCls = (err?: string) =>
+    [
+      "w-full px-3 py-2.5 text-sm font-body border bg-white text-sox-body",
+      "focus:outline-none focus:ring-2 focus:ring-crimson focus:border-crimson transition-colors",
+      err ? "border-crimson bg-red-50" : "border-sox-border",
+    ].join(" ");
 
   function Field({
     label,
@@ -72,25 +79,27 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
   }) {
     return (
       <div className="flex flex-col gap-1">
-        <label htmlFor={id} className="text-sm font-medium text-gray-700">
+        <label
+          htmlFor={id}
+          className="font-heading font-bold text-xs uppercase tracking-wide text-sox-body"
+        >
           {label}
         </label>
         {children}
-        {error && <p className="text-xs text-red-600">{error}</p>}
+        {error && (
+          <p className="font-body text-xs text-crimson">{error}</p>
+        )}
       </div>
     );
   }
 
-  const inputCls = (err?: string) =>
-    `w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-      err ? "border-red-400 bg-red-50" : "border-gray-300"
-    }`;
-
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
       {!complete && (
-        <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
-          Complete all 11 series picks before submitting.
+        <div className="border-l-4 border-crimson bg-sox-gray px-4 py-3">
+          <p className="font-body text-sm text-sox-body">
+            Complete all 11 series picks before submitting.
+          </p>
         </div>
       )}
 
@@ -170,59 +179,60 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
       </div>
 
       {/* Tiebreaker */}
-      <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 flex flex-col gap-4">
-        <h3 className="font-semibold text-blue-900 text-sm uppercase tracking-wide">
-          Tiebreaker
-        </h3>
-        <p className="text-xs text-blue-700">
-          In case of a tie in bracket score, these predictions determine the winner.
-        </p>
+      <div className="border border-sox-border border-t-4 border-t-crimson">
+        <div className="bg-sox-charcoal px-4 py-2.5">
+          <p className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-white/60">
+            Tiebreaker
+          </p>
+        </div>
+        <div className="p-4 bg-sox-gray flex flex-col gap-4">
+          <p className="font-body text-xs text-gray-500">
+            Used only to break ties in bracket score. Closest without going over wins each tiebreaker step.
+          </p>
 
-        <Field
-          label="Predicted World Series length (games)"
-          id="tbWsGames"
-          error={errors.tbWsGames}
-        >
-          <div className="flex gap-2">
-            {[4, 5, 6, 7].map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => set("tbWsGames", n)}
-                className={[
-                  "flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors",
-                  form.tbWsGames === n
-                    ? "bg-blue-800 text-white border-blue-800"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-blue-400",
-                ].join(" ")}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-          {errors.tbWsGames && (
-            <p className="text-xs text-red-600">{errors.tbWsGames}</p>
-          )}
-        </Field>
+          <Field
+            label="Predicted World Series length (games)"
+            id="tbWsGames"
+            error={errors.tbWsGames}
+          >
+            <div className="flex gap-2">
+              {[4, 5, 6, 7].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => set("tbWsGames", n)}
+                  className={[
+                    "flex-1 py-2 text-sm font-heading font-bold uppercase tracking-wide border transition-colors",
+                    form.tbWsGames === n
+                      ? "bg-crimson text-white border-crimson"
+                      : "bg-white text-sox-body border-sox-border hover:border-crimson",
+                  ].join(" ")}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </Field>
 
-        <Field
-          label="Combined runs in the deciding game"
-          id="tbCombinedRuns"
-          error={errors.tbCombinedRuns}
-        >
-          <input
+          <Field
+            label="Combined runs in the deciding game"
             id="tbCombinedRuns"
-            type="number"
-            min={0}
-            max={99}
-            value={form.tbCombinedRuns || ""}
-            onChange={(e) =>
-              set("tbCombinedRuns", parseInt(e.target.value, 10) || 0)
-            }
-            className={inputCls(errors.tbCombinedRuns)}
-            placeholder="e.g. 9"
-          />
-        </Field>
+            error={errors.tbCombinedRuns}
+          >
+            <input
+              id="tbCombinedRuns"
+              type="number"
+              min={0}
+              max={99}
+              value={form.tbCombinedRuns || ""}
+              onChange={(e) =>
+                set("tbCombinedRuns", parseInt(e.target.value, 10) || 0)
+              }
+              className={inputCls(errors.tbCombinedRuns)}
+              placeholder="e.g. 9"
+            />
+          </Field>
+        </div>
       </div>
 
       {/* Rules checkbox */}
@@ -231,31 +241,31 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
           type="checkbox"
           checked={form.agreedToRules}
           onChange={(e) => set("agreedToRules", e.target.checked)}
-          className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          className="mt-0.5 h-4 w-4 border-sox-border text-crimson focus:ring-crimson"
         />
-        <span className="text-sm text-gray-600">
+        <span className="font-body text-sm text-sox-body">
           I have read and agree to the{" "}
-          <a href="#rules" className="underline text-blue-700 hover:text-blue-900">
+          <a href="#rules" className="underline text-crimson hover:text-crimson-dark">
             Official Rules
           </a>
           .
         </span>
       </label>
       {errors.agreedToRules && (
-        <p className="text-xs text-red-600 -mt-3">{errors.agreedToRules}</p>
+        <p className="font-body text-xs text-crimson -mt-3">{errors.agreedToRules}</p>
       )}
 
       <button
         type="submit"
         disabled={!complete || submitting}
         className={[
-          "w-full py-3 px-6 rounded-xl font-bold text-sm uppercase tracking-wide transition-all",
+          "w-full py-3.5 px-6 font-heading font-black text-sm uppercase tracking-widest transition-all",
           complete && !submitting
-            ? "bg-blue-800 hover:bg-blue-900 text-white shadow-md hover:shadow-lg"
-            : "bg-gray-200 text-gray-400 cursor-not-allowed",
+            ? "bg-crimson hover:bg-crimson-dark text-white shadow-md hover:shadow-lg cursor-pointer"
+            : "bg-sox-border text-gray-400 cursor-not-allowed",
         ].join(" ")}
       >
-        {submitting ? "Submitting…" : "Submit My Bracket"}
+        {submitting ? "Submitting…" : "Submit My Bracket →"}
       </button>
     </form>
   );

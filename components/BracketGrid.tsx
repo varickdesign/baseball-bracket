@@ -13,6 +13,13 @@ import SeriesCard from "./SeriesCard";
 type RoundKey = "wildcard" | "division" | "championship" | "worldseries";
 const ROUNDS: RoundKey[] = ["wildcard", "division", "championship", "worldseries"];
 
+const ROUND_SHORT: Record<RoundKey, string> = {
+  wildcard: "Wild Card",
+  division: "Division",
+  championship: "LCS",
+  worldseries: "World Series",
+};
+
 interface Props {
   bracket: BracketState;
   onPick: (seriesId: string, winner: Team) => void;
@@ -30,36 +37,37 @@ export default function BracketGrid({ bracket, onPick, disabled }: Props) {
     return (
       <div className="lg:hidden">
         {/* Round tabs */}
-        <div className="flex overflow-x-auto gap-1 pb-2 mb-4 no-scrollbar">
+        <div className="flex overflow-x-auto gap-1 pb-3 mb-4 no-scrollbar border-b border-sox-border">
           {ROUNDS.map((r) => (
             <button
               key={r}
               onClick={() => setActiveRound(r)}
               className={[
-                "flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors",
+                "flex-shrink-0 px-4 py-1.5 text-xs font-heading font-bold uppercase tracking-wide transition-colors",
                 activeRound === r
-                  ? "bg-blue-800 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200",
+                  ? "bg-crimson text-white"
+                  : "bg-sox-gray text-gray-500 hover:text-sox-body",
               ].join(" ")}
             >
-              {r === "wildcard" ? "Wild Card" :
-               r === "division" ? "Division" :
-               r === "championship" ? "LCS" : "World Series"}
+              {ROUND_SHORT[r]}
             </button>
           ))}
         </div>
 
-        <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">
+        <div className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">
           {ROUND_LABELS[activeRound]}
         </div>
 
         {activeRound !== "worldseries" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {["AL", "NL"].map((lg) => {
               const lgIds = (order[lg] ?? []) as string[];
               return (
                 <div key={lg}>
-                  <div className="text-xs font-bold text-gray-500 mb-2">{lg}</div>
+                  <div className="font-heading font-black text-xs uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-2">
+                    <span className="w-4 h-0.5 bg-crimson" />
+                    {lg}
+                  </div>
                   <div className="flex flex-col gap-3">
                     {lgIds.map((sid) => (
                       <SeriesCard
@@ -92,69 +100,67 @@ export default function BracketGrid({ bracket, onPick, disabled }: Props) {
     return (
       <div className="hidden lg:block">
         {/* Column headers */}
-        <div className="grid grid-cols-[1fr_1fr_1fr_1fr_80px_1fr_1fr_1fr_1fr] gap-2 mb-2">
-          {["Wild Card", "Div. Series", "LCS", "", "WS", "", "LCS", "Div. Series", "Wild Card"].map(
-            (label, i) => (
-              <div
-                key={i}
-                className="text-center text-xs font-semibold uppercase tracking-wide text-gray-400"
-              >
-                {label}
-              </div>
-            )
-          )}
+        <div className="grid grid-cols-[1fr_1fr_1fr_1fr_90px_1fr_1fr_1fr_1fr] gap-2 mb-3">
+          {[
+            "Wild Card", "Div. Series", "LCS", "",
+            "WS",
+            "", "LCS", "Div. Series", "Wild Card",
+          ].map((label, i) => (
+            <div
+              key={i}
+              className="text-center font-heading font-bold text-[10px] uppercase tracking-[0.15em] text-gray-400"
+            >
+              {label}
+            </div>
+          ))}
         </div>
 
-        {/* League labels + cards */}
-        <div className="relative">
-          {/* AL label */}
-          <div className="absolute -left-6 top-1/4 -translate-y-1/2 -rotate-90 text-xs font-bold tracking-widest text-blue-800 uppercase">
-            AL
+        {/* League labels */}
+        <div className="flex justify-between mb-1 px-1">
+          <span className="font-heading font-black text-[10px] uppercase tracking-widest text-crimson flex items-center gap-1">
+            <span className="w-3 h-0.5 bg-crimson" /> AL
+          </span>
+          <span className="font-heading font-black text-[10px] uppercase tracking-widest text-crimson flex items-center gap-1">
+            NL <span className="w-3 h-0.5 bg-crimson" />
+          </span>
+        </div>
+
+        <div className="grid grid-cols-[1fr_1fr_1fr_1fr_90px_1fr_1fr_1fr_1fr] gap-2 items-start">
+          {/* AL side (left) */}
+          <div className="flex flex-col gap-3">
+            {["AL-WC-1", "AL-WC-2"].map((sid) => (
+              <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
+            ))}
           </div>
-          {/* NL label */}
-          <div className="absolute -left-6 top-3/4 -translate-y-1/2 -rotate-90 text-xs font-bold tracking-widest text-red-700 uppercase">
-            NL
+          <div className="flex flex-col gap-3">
+            {["AL-DS-1", "AL-DS-2"].map((sid) => (
+              <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
+            ))}
+          </div>
+          <div className="flex flex-col justify-center gap-3 mt-10">
+            <SeriesCard series={bracket.series["AL-CS"]} onPick={onPick} disabled={disabled} />
+          </div>
+          <div />
+
+          {/* World Series center */}
+          <div className="flex flex-col justify-center" style={{ minHeight: 280 }}>
+            <SeriesCard series={bracket.series["WS"]} onPick={onPick} disabled={disabled} />
           </div>
 
-          <div className="grid grid-cols-[1fr_1fr_1fr_1fr_80px_1fr_1fr_1fr_1fr] gap-2 items-start">
-            {/* AL side (left) */}
-            <div className="flex flex-col gap-3">
-              {["AL-WC-1", "AL-WC-2"].map((sid) => (
-                <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
-              ))}
-            </div>
-            <div className="flex flex-col gap-3">
-              {["AL-DS-1", "AL-DS-2"].map((sid) => (
-                <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
-              ))}
-            </div>
-            <div className="flex flex-col justify-center gap-3 mt-12">
-              <SeriesCard series={bracket.series["AL-CS"]} onPick={onPick} disabled={disabled} />
-            </div>
-            {/* Spacer col for AL → WS connector */}
-            <div />
-
-            {/* World Series center */}
-            <div className="flex flex-col justify-center" style={{ minHeight: 300 }}>
-              <SeriesCard series={bracket.series["WS"]} onPick={onPick} disabled={disabled} />
-            </div>
-
-            {/* Spacer col for WS → NL connector */}
-            <div />
-            {/* NL side (right) — mirror order */}
-            <div className="flex flex-col justify-center gap-3 mt-12">
-              <SeriesCard series={bracket.series["NL-CS"]} onPick={onPick} disabled={disabled} />
-            </div>
-            <div className="flex flex-col gap-3">
-              {["NL-DS-1", "NL-DS-2"].map((sid) => (
-                <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
-              ))}
-            </div>
-            <div className="flex flex-col gap-3">
-              {["NL-WC-1", "NL-WC-2"].map((sid) => (
-                <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
-              ))}
-            </div>
+          <div />
+          {/* NL side (right) */}
+          <div className="flex flex-col justify-center gap-3 mt-10">
+            <SeriesCard series={bracket.series["NL-CS"]} onPick={onPick} disabled={disabled} />
+          </div>
+          <div className="flex flex-col gap-3">
+            {["NL-DS-1", "NL-DS-2"].map((sid) => (
+              <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
+            ))}
+          </div>
+          <div className="flex flex-col gap-3">
+            {["NL-WC-1", "NL-WC-2"].map((sid) => (
+              <SeriesCard key={sid} series={bracket.series[sid]} onPick={onPick} disabled={disabled} />
+            ))}
           </div>
         </div>
       </div>
@@ -163,10 +169,17 @@ export default function BracketGrid({ bracket, onPick, disabled }: Props) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">Your Bracket</h2>
-        <span className="text-sm text-gray-500">
-          {picks} / {TOTAL_SERIES} picks
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <p className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-crimson">
+            Your Bracket
+          </p>
+          <h2 className="font-heading font-black text-xl uppercase text-sox-body tracking-tight">
+            Make Your Picks
+          </h2>
+        </div>
+        <span className="font-heading font-bold text-sm text-gray-400 uppercase tracking-wide">
+          {picks} <span className="text-gray-300">/</span> {TOTAL_SERIES}
         </span>
       </div>
       <MobileView />

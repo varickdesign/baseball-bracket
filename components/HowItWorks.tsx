@@ -24,18 +24,24 @@ const STEPS = [
 export default function HowItWorks() {
   return (
     <section className="py-8">
-      <h2 className="text-2xl font-extrabold text-gray-900 mb-6 text-center">
+      <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-crimson mb-2">
         How It Works
+      </p>
+      <h2 className="font-heading font-black text-2xl sm:text-3xl uppercase text-sox-body tracking-tight mb-6">
+        Four Steps to Enter
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {STEPS.map((step, i) => (
           <div
             key={i}
-            className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex flex-col gap-2"
+            className="bg-white border border-sox-border p-5 flex flex-col gap-3"
           >
-            <div className="text-3xl">{step.icon}</div>
-            <h3 className="font-bold text-gray-900 text-sm">{step.title}</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">{step.body}</p>
+            <div className="text-2xl">{step.icon}</div>
+            <div className="w-8 h-0.5 bg-crimson" />
+            <h3 className="font-heading font-bold text-sox-body text-sm uppercase tracking-wide">
+              {step.title}
+            </h3>
+            <p className="font-body text-sm text-gray-500 leading-relaxed">{step.body}</p>
           </div>
         ))}
       </div>

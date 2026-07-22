@@ -6,6 +6,8 @@ import {
   buildInitialBracket,
   isBracketComplete,
   pickWinner,
+  countPicks,
+  TOTAL_SERIES,
 } from "@/lib/bracket-engine";
 import BracketGrid from "./BracketGrid";
 import EntryForm from "./EntryForm";
@@ -26,7 +28,7 @@ function saveToStorage(state: BracketState) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
-    // storage unavailable — silently ignore
+    // storage unavailable
   }
 }
 
@@ -36,7 +38,7 @@ async function fireConfetti() {
     particleCount: 200,
     spread: 90,
     origin: { y: 0.6 },
-    colors: ["#1e3a8a", "#fbbf24", "#ef4444", "#ffffff"],
+    colors: ["#C92F36", "#0B0B0B", "#FFFFFF", "#FF671F"],
   });
   setTimeout(
     () =>
@@ -44,7 +46,7 @@ async function fireConfetti() {
         particleCount: 120,
         spread: 70,
         origin: { y: 0.55 },
-        colors: ["#1e3a8a", "#fbbf24", "#ef4444"],
+        colors: ["#C92F36", "#201D1D", "#FFFFFF"],
       }),
     400
   );
@@ -55,14 +57,12 @@ export default function BracketApp() {
   const [hydrated, setHydrated] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // Hydrate from localStorage after mount
   useEffect(() => {
     const saved = loadFromStorage();
     if (saved) setBracket(saved);
     setHydrated(true);
   }, []);
 
-  // Autosave on every change
   useEffect(() => {
     if (hydrated) saveToStorage(bracket);
   }, [bracket, hydrated]);
@@ -74,9 +74,7 @@ export default function BracketApp() {
   const handleReset = useCallback(() => {
     const fresh = buildInitialBracket();
     setBracket(fresh);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {}
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
   }, []);
 
   const handleSubmitSuccess = useCallback(async () => {
@@ -87,21 +85,23 @@ export default function BracketApp() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center gap-6 py-24 text-center px-4">
-        <div className="text-6xl">🎉</div>
-        <h2 className="text-3xl font-extrabold text-gray-900">
+      <div className="flex flex-col items-center justify-center gap-6 py-24 text-center px-4 bg-sox-gray">
+        <div className="text-5xl">🎉</div>
+        <p className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-crimson">
+          Entry Received
+        </p>
+        <h2 className="font-heading font-black text-3xl uppercase text-sox-body tracking-tight">
           Your bracket is in!
         </h2>
-        <p className="text-gray-600 max-w-md">
-          We received your picks. Check your email for a confirmation. Good luck — and
-          play ball!
+        <p className="font-body text-gray-500 max-w-md">
+          We received your picks. Check your email for a confirmation. Good luck — and play ball!
         </p>
         <button
           onClick={() => {
             setSubmitted(false);
             handleReset();
           }}
-          className="text-sm text-blue-700 underline hover:text-blue-900"
+          className="font-body text-sm text-crimson underline hover:text-crimson-dark"
         >
           Start a new entry
         </button>
@@ -110,64 +110,74 @@ export default function BracketApp() {
   }
 
   const complete = isBracketComplete(bracket);
+  const picks = countPicks(bracket);
+  const pct = Math.round((picks / TOTAL_SERIES) * 100);
 
   return (
     <div className="flex flex-col gap-10">
       {/* Bracket section */}
-      <section id="bracket">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-extrabold text-gray-900">Your Picks</h2>
+      <section id="bracket" className="border border-sox-border border-t-4 border-t-sox-charcoal">
+        {/* Section header bar */}
+        <div className="bg-sox-charcoal px-5 py-3 flex items-center justify-between">
+          <p className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-white/60">
+            Your Bracket
+          </p>
           <button
             onClick={handleReset}
-            className="text-sm text-gray-400 hover:text-gray-600 underline"
+            className="font-body text-xs text-white/30 hover:text-white/70 underline transition-colors"
           >
-            Reset bracket
+            Reset
           </button>
         </div>
 
-        {!hydrated ? (
-          <div className="h-64 flex items-center justify-center text-gray-300 text-sm">
-            Loading…
-          </div>
-        ) : (
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 sm:p-6 overflow-x-auto">
+        <div className="p-4 sm:p-6 bg-white overflow-x-auto">
+          {!hydrated ? (
+            <div className="h-64 flex items-center justify-center font-heading text-xs uppercase tracking-widest text-gray-300">
+              Loading…
+            </div>
+          ) : (
             <BracketGrid bracket={bracket} onPick={handlePick} />
+          )}
+        </div>
+
+        {/* Progress bar */}
+        {hydrated && (
+          <div className="px-5 pb-4 pt-2 border-t border-sox-border bg-sox-gray">
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="font-heading font-bold text-[10px] uppercase tracking-widest text-gray-400">
+                {complete ? "All picks complete" : "Picks"}
+              </span>
+              <span className="font-heading font-black text-sm text-sox-body">
+                {picks}
+                <span className="text-gray-400 font-body font-normal text-xs"> / {TOTAL_SERIES}</span>
+              </span>
+            </div>
+            <div className="h-1.5 bg-sox-border overflow-hidden">
+              <div
+                className="h-full bg-crimson transition-all duration-500"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            {complete && (
+              <p className="font-body text-xs text-crimson font-semibold mt-2">
+                ✓ All series picked — fill in your info below and submit.
+              </p>
+            )}
           </div>
         )}
       </section>
 
-      {/* Progress bar */}
-      {hydrated && (
-        <div className="flex flex-col gap-1">
-          <div className="flex justify-between text-xs text-gray-500">
-            <span>Picks complete</span>
-            <span>
-              {Object.values(bracket.series).filter((s) => s.winner).length} / 11
-            </span>
-          </div>
-          <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
-            <div
-              className="h-full bg-blue-700 rounded-full transition-all duration-500"
-              style={{
-                width: `${
-                  (Object.values(bracket.series).filter((s) => s.winner).length / 11) *
-                  100
-                }%`,
-              }}
-            />
-          </div>
-          {complete && (
-            <p className="text-sm text-green-700 font-semibold text-center mt-1">
-              All picks made! Fill in your info below and submit.
-            </p>
-          )}
+      {/* Entry form section */}
+      <section className="border border-sox-border border-t-4 border-t-crimson">
+        <div className="bg-sox-charcoal px-5 py-3">
+          <p className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-white/60">
+            Submit Entry
+          </p>
+          <h2 className="font-heading font-black text-lg uppercase text-white tracking-tight">
+            Your Info
+          </h2>
         </div>
-      )}
-
-      {/* Entry form */}
-      <section>
-        <h2 className="text-2xl font-extrabold text-gray-900 mb-6">Submit Your Entry</h2>
-        <div className="max-w-lg">
+        <div className="p-5 sm:p-6 bg-white max-w-lg">
           <EntryForm bracket={bracket} onSubmitSuccess={handleSubmitSuccess} />
         </div>
       </section>
