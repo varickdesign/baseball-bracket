@@ -11,6 +11,7 @@ import {
 } from "@/lib/bracket-engine";
 import BracketGrid from "./BracketGrid";
 import EntryForm from "./EntryForm";
+import Rules from "./Rules";
 
 const STORAGE_KEY = "wsbc-bracket-2026";
 
@@ -167,20 +168,26 @@ export default function BracketApp() {
         )}
       </section>
 
-      {/* Entry form section */}
-      <section className="border border-sox-border border-t-4 border-t-crimson">
-        <div className="bg-sox-charcoal px-5 py-3">
-          <p className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-white/60">
-            Submit Entry
-          </p>
-          <h2 className="font-heading font-black text-lg uppercase text-white tracking-tight">
-            Your Info
-          </h2>
-        </div>
-        <div className="p-5 sm:p-6 bg-white max-w-lg">
-          <EntryForm bracket={bracket} onSubmitSuccess={handleSubmitSuccess} />
-        </div>
-      </section>
+      {/* Entry form + Rules — two-column row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Left: Submit Entry */}
+        <section className="border border-sox-border border-t-4 border-t-crimson">
+          <div className="bg-sox-charcoal px-5 py-3">
+            <p className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-white/60">
+              Submit Entry
+            </p>
+            <h2 className="font-heading font-black text-lg uppercase text-white tracking-tight">
+              Your Info
+            </h2>
+          </div>
+          <div className="p-5 sm:p-6 bg-white">
+            <EntryForm bracket={bracket} onSubmitSuccess={handleSubmitSuccess} />
+          </div>
+        </section>
+
+        {/* Right: Rules */}
+        <Rules />
+      </div>
     </div>
   );
 }

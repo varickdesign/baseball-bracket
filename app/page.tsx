@@ -9,7 +9,6 @@ import LatestNews from "@/components/LatestNews";
 import Newsletter from "@/components/Newsletter";
 import Information from "@/components/Information";
 import Clients from "@/components/Clients";
-import Rules from "@/components/Rules";
 import Footer from "@/components/Footer";
 
 import { NEWS_ARTICLES } from "@/data/news";
@@ -55,8 +54,6 @@ export default function Home() {
         {/* Sponsor strip */}
         <Clients sponsors={SPONSORS} />
 
-        {/* Official rules */}
-        <Rules />
       </div>
 
       {/* Newsletter — full-bleed charcoal */}
