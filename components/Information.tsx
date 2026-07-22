@@ -23,7 +23,7 @@ const DEFAULT_ITEMS: InfoItem[] = [
   {
     icon: "🏆",
     heading: "The Prize",
-    body: "The top bracket score wins a $500 Bargain Grocery Gift Card. Tiebreaker predictions (WS length and combined runs in the deciding game) break any ties.",
+    body: "The top bracket score wins a $200 Bargain Grocery Gift Card. Tiebreaker predictions (WS length and combined runs in the deciding game) break any ties.",
   },
   {
     icon: "🔔",

@@ -10,8 +10,11 @@ interface Props {
   onSubmitSuccess: () => void;
 }
 
-// Local form state allows agreedToRules = false before validation
-type FormState = Omit<EntryFormData, "agreedToRules"> & { agreedToRules: boolean };
+// Local form state allows agreedToRules = false and ebtSnap = undefined before validation
+type FormState = Omit<EntryFormData, "agreedToRules" | "ebtSnap"> & {
+  agreedToRules: boolean;
+  ebtSnap: boolean | undefined;
+};
 type FieldErrors = Partial<Record<keyof EntryFormData, string>>;
 
 const EMPTY: FormState = {
@@ -21,6 +24,7 @@ const EMPTY: FormState = {
   phone: "",
   city: "",
   state: "",
+  ebtSnap: undefined,
   tbWsGames: 0,
   tbCombinedRuns: 0,
   agreedToRules: false,
@@ -70,11 +74,13 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
     label,
     id,
     error,
+    required = false,
     children,
   }: {
     label: string;
     id: string;
     error?: string;
+    required?: boolean;
     children: React.ReactNode;
   }) {
     return (
@@ -84,6 +90,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
           className="font-heading font-bold text-xs uppercase tracking-wide text-sox-body"
         >
           {label}
+          {required && <span className="text-crimson ml-0.5">*</span>}
         </label>
         {children}
         {error && (
@@ -103,9 +110,13 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
         </div>
       )}
 
+      <p className="font-body text-xs text-gray-500">
+        Required fields are marked with <span className="text-crimson font-bold">*</span>
+      </p>
+
       {/* Personal info */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Field label="First Name" id="firstName" error={errors.firstName}>
+        <Field label="First Name" id="firstName" error={errors.firstName} required>
           <input
             id="firstName"
             type="text"
@@ -115,7 +126,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
             placeholder="Jane"
           />
         </Field>
-        <Field label="Last Name" id="lastName" error={errors.lastName}>
+        <Field label="Last Name" id="lastName" error={errors.lastName} required>
           <input
             id="lastName"
             type="text"
@@ -127,7 +138,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
         </Field>
       </div>
 
-      <Field label="Email Address" id="email" error={errors.email}>
+      <Field label="Email Address" id="email" error={errors.email} required>
         <input
           id="email"
           type="email"
@@ -138,7 +149,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
         />
       </Field>
 
-      <Field label="Phone Number (10 digits)" id="phone" error={errors.phone}>
+      <Field label="Phone Number (10 digits)" id="phone" error={errors.phone} required>
         <input
           id="phone"
           type="tel"
@@ -151,7 +162,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
       </Field>
 
       <div className="grid grid-cols-2 gap-4">
-        <Field label="City" id="city" error={errors.city}>
+        <Field label="City" id="city" error={errors.city} required>
           <input
             id="city"
             type="text"
@@ -161,7 +172,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
             placeholder="Rochester"
           />
         </Field>
-        <Field label="State" id="state" error={errors.state}>
+        <Field label="State" id="state" error={errors.state} required>
           <select
             id="state"
             value={form.state}
@@ -177,6 +188,25 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
           </select>
         </Field>
       </div>
+
+      {/* EBT/SNAP */}
+      <Field label="Do You Use EBT/SNAP?" id="ebtSnap" error={errors.ebtSnap} required>
+        <div className="flex gap-6 pt-0.5">
+          {([true, false] as const).map((val) => (
+            <label key={String(val)} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="ebtSnap"
+                value={String(val)}
+                checked={form.ebtSnap === val}
+                onChange={() => set("ebtSnap", val)}
+                className="h-4 w-4 border-sox-border text-crimson focus:ring-crimson"
+              />
+              <span className="font-body text-sm text-sox-body">{val ? "Yes" : "No"}</span>
+            </label>
+          ))}
+        </div>
+      </Field>
 
       {/* Tiebreaker */}
       <div className="border border-sox-border border-t-4 border-t-crimson">
@@ -194,6 +224,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
             label="Predicted World Series length (games)"
             id="tbWsGames"
             error={errors.tbWsGames}
+            required
           >
             <div className="flex gap-2">
               {[4, 5, 6, 7].map((n) => (
@@ -218,6 +249,7 @@ export default function EntryForm({ bracket, onSubmitSuccess }: Props) {
             label="Combined runs in the deciding game"
             id="tbCombinedRuns"
             error={errors.tbCombinedRuns}
+            required
           >
             <input
               id="tbCombinedRuns"

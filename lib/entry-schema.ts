@@ -9,6 +9,7 @@ export const entrySchema = z.object({
     .regex(/^\d{10}$/, "Enter a 10-digit phone number (digits only)"),
   city: z.string().min(1, "City is required"),
   state: z.string().length(2, "Select a state"),
+  ebtSnap: z.boolean({ error: "Please indicate EBT/SNAP status" }),
   tbWsGames: z
     .number({ error: "Select predicted series length" })
     .min(4)

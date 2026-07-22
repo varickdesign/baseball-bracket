@@ -24,8 +24,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["var(--font-jost)", "Jost", "sans-serif"],
-        body: ["var(--font-inter)", "Inter", "sans-serif"],
+        heading: ["var(--font-dm-sans)", "DM Sans", "sans-serif"],
+        body: ["var(--font-inter-tight)", "Inter Tight", "sans-serif"],
       },
     },
   },

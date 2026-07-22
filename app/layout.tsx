@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Jost, Inter } from "next/font/google";
+import { DM_Sans, Inter_Tight } from "next/font/google";
 import "./globals.css";
 
-const jost = Jost({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["600", "700", "800", "900"],
-  variable: "--font-jost",
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
-const inter = Inter({
+const interTight = Inter_Tight({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-inter",
+  variable: "--font-inter-tight",
   display: "swap",
 });
 
@@ -35,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${jost.variable} ${inter.variable} min-h-screen bg-white font-body antialiased text-sox-body`}>{children}</body>
+      <body className={`${dmSans.variable} ${interTight.variable} min-h-screen bg-white font-body antialiased text-sox-body`}>{children}</body>
     </html>
   );
 }
