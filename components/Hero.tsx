@@ -43,14 +43,20 @@ export default function Hero({
   ctaLabel = "Make Your Picks →",
   ctaHref = "#bracket",
 }: Props) {
-  const [time, setTime] = useState<TimeLeft>(getTimeLeft());
-  const expired = TARGET_DATE.getTime() <= Date.now();
+  // null until mounted — avoids SSR/client hydration mismatch on the live clock
+  const [time, setTime] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
-    if (expired) return;
-    const id = setInterval(() => setTime(getTimeLeft()), 1000);
+    const update = () => {
+      const t = getTimeLeft();
+      setTime(t);
+    };
+    update();
+    const id = setInterval(update, 1000);
     return () => clearInterval(id);
-  }, [expired]);
+  }, []);
+
+  const expired = time !== null && TARGET_DATE.getTime() <= Date.now();
 
   return (
     <section className="relative text-white overflow-hidden">
@@ -92,34 +98,36 @@ export default function Hero({
           {ctaLabel}
         </a>
 
-        {/* Countdown */}
-        {!expired ? (
-          <div className="mt-2 flex flex-col gap-2">
-            <p className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-white/40">
-              Entries close at first pitch
+        {/* Countdown — only renders after client mount to avoid hydration mismatch */}
+        {time !== null && (
+          expired ? (
+            <p className="font-heading font-bold text-xs uppercase tracking-widest text-crimson">
+              Entries are now closed.
             </p>
-            <div className="flex gap-3 sm:gap-5">
-              {[
-                { value: time.days,  label: "Days" },
-                { value: time.hours, label: "Hrs" },
-                { value: time.mins,  label: "Min" },
-                { value: time.secs,  label: "Sec" },
-              ].map(({ value, label }) => (
-                <div key={label} className="flex flex-col items-center">
-                  <span className="font-heading font-black text-3xl sm:text-4xl leading-none tabular-nums text-white">
-                    {pad(value)}
-                  </span>
-                  <span className="font-heading font-bold text-[9px] uppercase tracking-widest text-white/40 mt-1">
-                    {label}
-                  </span>
-                </div>
-              ))}
+          ) : (
+            <div className="mt-2 flex flex-col gap-2">
+              <p className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-white/40">
+                Entries close at first pitch
+              </p>
+              <div className="flex gap-3 sm:gap-5">
+                {[
+                  { value: time.days,  label: "Days" },
+                  { value: time.hours, label: "Hrs" },
+                  { value: time.mins,  label: "Min" },
+                  { value: time.secs,  label: "Sec" },
+                ].map(({ value, label }) => (
+                  <div key={label} className="flex flex-col items-center">
+                    <span className="font-heading font-black text-3xl sm:text-4xl leading-none tabular-nums text-white">
+                      {pad(value)}
+                    </span>
+                    <span className="font-heading font-bold text-[9px] uppercase tracking-widest text-white/40 mt-1">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ) : (
-          <p className="font-heading font-bold text-xs uppercase tracking-widest text-crimson">
-            Entries are now closed.
-          </p>
+          )
         )}
       </div>
     </section>

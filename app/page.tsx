@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import PrizePanel from "@/components/PrizePanel";
 import ScoringCard from "@/components/ScoringCard";
-import MatchupList from "@/components/MatchupList";
 import BracketApp from "@/components/BracketApp";
 import Bracket from "@/components/Bracket";
 import VideoNews from "@/components/VideoNews";
@@ -14,7 +13,6 @@ import Clients from "@/components/Clients";
 import Rules from "@/components/Rules";
 import Footer from "@/components/Footer";
 
-import { MATCHUPS } from "@/data/matchups";
 import { AL_STANDINGS, NL_STANDINGS } from "@/data/standings";
 import { NEWS_ARTICLES } from "@/data/news";
 import { VIDEO_ITEMS } from "@/data/videos";
@@ -38,9 +36,6 @@ export default function Home() {
           <ScoringCard />
         </div>
 
-        {/* Upcoming Wild Card matchups */}
-        <MatchupList matchups={MATCHUPS} />
-
         {/* Interactive bracket picker + entry form */}
         <BracketApp />
 
@@ -51,12 +46,14 @@ export default function Home() {
         <LatestNews articles={NEWS_ARTICLES} />
       </main>
 
-      {/* Full-bleed video section (dark background) */}
-      <div className="max-w-5xl mx-auto w-full px-4 py-4">
-        <VideoNews videos={VIDEO_ITEMS} />
+      {/* Video section */}
+      <div className="w-full bg-sox-black py-12">
+        <div className="max-w-5xl mx-auto px-4">
+          <VideoNews videos={VIDEO_ITEMS} />
+        </div>
       </div>
 
-      <main className="max-w-5xl mx-auto w-full px-4 flex flex-col gap-12 pb-12">
+      <div className="max-w-5xl mx-auto w-full px-4 flex flex-col gap-12 py-12">
         {/* Information cards */}
         <Information />
 
@@ -65,7 +62,7 @@ export default function Home() {
 
         {/* Official rules */}
         <Rules />
-      </main>
+      </div>
 
       {/* Newsletter — full-bleed charcoal */}
       <Newsletter />

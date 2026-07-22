@@ -34,8 +34,8 @@ const DEFAULT_ITEMS: InfoItem[] = [
 
 export default function Information({ title = "About the Challenge", items = DEFAULT_ITEMS }: Props) {
   return (
-    <section id="information" className="bg-sox-gray py-10 -mx-4 px-4 sm:mx-0 sm:px-0">
-      <div className="max-w-5xl mx-auto sm:px-0">
+    <section id="information" className="bg-sox-gray p-6 sm:p-8">
+      <div>
         <div className="mb-6">
           <p className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-crimson mb-1">
             Info

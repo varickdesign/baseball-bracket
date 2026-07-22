@@ -8,8 +8,8 @@ interface Props {
 
 export default function VideoNews({ videos, title = "Video" }: Props) {
   return (
-    <section className="bg-sox-black py-12 -mx-4 px-4 sm:-mx-0 sm:px-0">
-      <div className="max-w-5xl mx-auto">
+    <section>
+      <div>
         <div className="mb-6">
           <p className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] text-crimson mb-1">
             Watch
