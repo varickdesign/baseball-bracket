@@ -4,15 +4,14 @@ export default function Hero() {
   return (
     <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 text-white">
       <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col items-center text-center gap-4">
-        {/* Logo — replace public/logo-white.svg with the real Bargain Grocery logo */}
         <div className="mb-2">
           <Image
-            src="/logo-white.svg"
+            src="/logo.png"
             alt="Bargain Grocery"
-            width={200}
-            height={60}
+            width={120}
+            height={120}
             priority
-            className="h-12 w-auto"
+            className="h-24 w-24 rounded-full"
           />
         </div>
 

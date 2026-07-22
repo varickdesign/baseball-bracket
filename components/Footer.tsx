@@ -5,13 +5,12 @@ export default function Footer() {
     <footer className="bg-blue-950 text-blue-300 mt-16">
       <div className="max-w-5xl mx-auto px-4 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="flex flex-col items-center sm:items-start gap-2">
-          {/* Replace logo-white.svg with the real Bargain Grocery logo */}
           <Image
-            src="/logo-white.svg"
+            src="/logo.png"
             alt="Bargain Grocery"
-            width={140}
-            height={40}
-            className="h-8 w-auto opacity-80"
+            width={56}
+            height={56}
+            className="h-14 w-14 rounded-full"
           />
           <p className="text-xs text-blue-400">
             &copy; {new Date().getFullYear()} Bargain Grocery. All rights reserved.
