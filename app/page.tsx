@@ -4,7 +4,6 @@ import HowItWorks from "@/components/HowItWorks";
 import PrizePanel from "@/components/PrizePanel";
 import ScoringCard from "@/components/ScoringCard";
 import BracketApp from "@/components/BracketApp";
-import Bracket from "@/components/Bracket";
 import VideoNews from "@/components/VideoNews";
 import LatestNews from "@/components/LatestNews";
 import Newsletter from "@/components/Newsletter";
@@ -13,7 +12,6 @@ import Clients from "@/components/Clients";
 import Rules from "@/components/Rules";
 import Footer from "@/components/Footer";
 
-import { AL_STANDINGS, NL_STANDINGS } from "@/data/standings";
 import { NEWS_ARTICLES } from "@/data/news";
 import { VIDEO_ITEMS } from "@/data/videos";
 import { SPONSORS } from "@/data/sponsors";
@@ -38,9 +36,6 @@ export default function Home() {
 
         {/* Interactive bracket picker + entry form */}
         <BracketApp />
-
-        {/* Postseason field / standings table */}
-        <Bracket alRows={AL_STANDINGS} nlRows={NL_STANDINGS} />
 
         {/* Latest news */}
         <LatestNews articles={NEWS_ARTICLES} />
